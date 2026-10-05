@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas de Eventos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+    <h1>🎟️ Reservas de Eventos</h1>
+    <div id="userBox" class="user-box hidden">
+        <span id="userName"></span>
+        <span id="userRole" class="badge"></span>
+        <button id="logoutBtn" class="btn btn-outline">Cerrar sesión</button>
+    </div>
+</header>
+
+<div id="alert" class="alert hidden" role="alert"></div>
+
+<main>
+    <!-- ================= LOGIN / REGISTRO ================= -->
+    <section id="authView" class="card auth-card">
+        <div class="tabs">
+            <button class="tab active" data-auth-tab="login">Iniciar sesión</button>
+            <button class="tab" data-auth-tab="register">Registrarse</button>
+        </div>
+
+        <form id="loginForm">
+            <label>Usuario
+                <input type="text" id="loginUsername" required autocomplete="username">
+            </label>
+            <label>Contraseña
+                <input type="password" id="loginPassword" required autocomplete="current-password">
+            </label>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <a id="githubBtn" class="btn btn-dark" href="#">Entrar con GitHub</a>
+        </form>
+
+        <form id="registerForm" class="hidden">
+            <label>Usuario
+                <input type="text" id="regUsername" required minlength="3" maxlength="50">
+            </label>
+            <label>Contraseña (mínimo 6)
+                <input type="password" id="regPassword" required minlength="6">
+            </label>
+            <div class="row">
+                <label>Nombre
+                    <input type="text" id="regFirstname" required>
+                </label>
+                <label>Apellido
+                    <input type="text" id="regLastname" required>
+                </label>
+            </div>
+            <label>Edad
+                <input type="number" id="regAge" required min="1" max="120">
+            </label>
+            <button type="submit" class="btn btn-primary">Crear cuenta</button>
+        </form>
+    </section>
+
+    <!-- ================= APLICACION ================= -->
+    <section id="appView" class="hidden">
+        <nav class="tabs main-tabs">
+            <button class="tab active" data-app-tab="events">Eventos</button>
+            <button class="tab" data-app-tab="bookings">Mis reservas</button>
+        </nav>
+
+        <!-- Eventos -->
+        <div id="eventsTab">
+            <div class="toolbar">
+                <h2>Eventos disponibles</h2>
+                <button id="newEventBtn" class="btn btn-primary hidden">+ Nuevo evento</button>
+            </div>
+            <div id="eventsList" class="grid"></div>
+            <div class="pager">
+                <button id="prevPage" class="btn btn-outline">← Anterior</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage" class="btn btn-outline">Siguiente →</button>
+            </div>
+        </div>
+
+        <!-- Mis reservas -->
+        <div id="bookingsTab" class="hidden">
+            <div class="toolbar"><h2>Mis reservas</h2></div>
+            <div class="card table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>#</th><th>Evento</th><th>Fecha del evento</th><th>Entradas</th>
+                        <th>Total</th><th>Reservado el</th><th>Estado</th><th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="bookingsBody"></tbody>
+                </table>
+                <p id="noBookings" class="muted hidden">Aún no tienes reservas.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Detalle del evento + formulario de reserva -->
+<dialog id="detailDialog">
+    <div class="dialog-head">
+        <h3 id="detailTitle"></h3>
+        <button class="close" data-close="detailDialog" aria-label="Cerrar">✕</button>
+    </div>
+    <p id="detailDesc" class="muted"></p>
+    <ul class="detail-list">
+        <li><strong>Fecha:</strong> <span id="detailDate"></span></li>
+        <li><strong>Lugar:</strong> <span id="detailVenue"></span></li>
+        <li><strong>Precio por entrada:</strong> <span id="detailPrice"></span></li>
+        <li><strong>Cupos disponibles:</strong> <span id="detailSeats"></span></li>
+    </ul>
+
+    <form id="bookingForm">
+        <label>Cantidad de entradas
+            <input type="number" id="bookingQty" min="1" value="1" required>
+        </label>
+        <p class="total">Total estimado: <strong id="bookingTotal">$0.00</strong>
+            <small class="muted">(el servidor calcula el total final)</small></p>
+        <button type="submit" class="btn btn-primary">Reservar</button>
+    </form>
+
+    <div id="adminActions" class="admin-actions hidden">
+        <button id="editEventBtn" class="btn btn-outline">Editar</button>
+        <button id="deleteEventBtn" class="btn btn-danger">Eliminar</button>
+    </div>
+</dialog>
+
+<!-- Crear / editar evento (ADMIN) -->
+<dialog id="eventFormDialog">
+    <div class="dialog-head">
+        <h3 id="eventFormTitle">Nuevo evento</h3>
+        <button class="close" data-close="eventFormDialog" aria-label="Cerrar">✕</button>
+    </div>
+    <form id="eventForm">
+        <label>Título <input type="text" id="evTitle" required maxlength="255"></label>
+        <label>Descripción <textarea id="evDescription" rows="3"></textarea></label>
+        <label>Fecha y hora <input type="datetime-local" id="evDate" required></label>
+        <label>Lugar <input type="text" id="evVenue" required maxlength="255"></label>
+        <div class="row">
+            <label>Capacidad <input type="number" id="evCapacity" min="1" required></label>
+            <label>Precio por entrada <input type="number" id="evPrice" min="0" step="0.01" required></label>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
